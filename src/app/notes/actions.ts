@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import type { Page, ReadNote } from "~/lib/types";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createNote(formData: FormData) {
   // Get user token.
@@ -69,6 +70,58 @@ export async function listNotesData(
   }
 
   return (await response.json()) as Page<ReadNote>;
+}
+
+export async function updateNote(
+  id: string,
+  input: { title: string; content: string | null; tags: string[] },
+): Promise<ReadNote> {
+  // Get token and user.
+  const { tokenId, userId } = await getTokenAndUser();
+
+  const response = await fetch(`${process.env.NOTES_API_URL}/api/notes/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokenId}`,
+    },
+    body: JSON.stringify({
+      title: input.title,
+      content: input.content ?? "",
+      tags: input.tags,
+    }),
+  });
+
+  // Check status of response.
+  if (!response.ok) {
+    throw new Error("Failed to patch note.");
+  }
+
+  // Revalidate tags and path.
+  revalidateTag(`notes:${userId}`);
+  revalidateTag(`note:${userId}:${id}`);
+  revalidatePath(`/notes/${id}`);
+
+  return (await response.json()) as ReadNote;
+}
+
+export async function deleteNote(id: string) {
+  // Get token and user.
+  const { tokenId, userId } = await getTokenAndUser();
+
+  const response = await fetch(`${process.env.NOTES_API_URL}/api/notes/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${tokenId}` },
+  });
+
+  // Check status of response.
+  if (!response.ok) {
+    throw new Error("Failed to delete note.");
+  }
+
+  // Revalidate tags.
+  revalidateTag(`notes:${userId}`);
+  revalidateTag(`note:${userId}:${id}`);
 }
 
 /**

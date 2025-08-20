@@ -7,7 +7,7 @@ interface SideBarProps {
 
 export default function Sidebar({ notes }: SideBarProps) {
   return (
-    <aside className="relative shadow-xl">
+    <aside className="relative border-r border-r-stone-400/25 shadow-xl">
       {/* Textures */}
       <div className="absolute inset-0 -z-10 h-screen w-full bg-[image:var(--paper-texture)] opacity-30" />
       <div className="spine-pattern absolute h-full w-10 border-r-[0.4px] border-r-white shadow" />
