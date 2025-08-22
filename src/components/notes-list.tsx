@@ -24,7 +24,7 @@ export default function NotesList({ notes }: NotesListProps) {
               href={`/notes/${n.id}`}
               aria-current={noteSelected ? "page" : undefined}
               className={clsx(
-                "block truncate px-2 py-1 text-sm transition-colors",
+                "block truncate rounded px-2 py-1 text-sm transition-colors",
                 noteSelected
                   ? "bg-accent text-primary-50"
                   : "hover:bg-accent/25",

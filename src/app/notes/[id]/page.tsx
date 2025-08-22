@@ -1,5 +1,5 @@
-import { getNoteData } from "~/app/notes/actions";
-import NoteEditor from "~/components/note-editor";
+import { getNote } from "~/app/actions";
+import NoteWrapper from "~/components/note/wrapper";
 
 // @ts-expect-error Linter is stupid.
 export default async function NoteDetailPage({ params }) {
@@ -7,8 +7,8 @@ export default async function NoteDetailPage({ params }) {
   const { id } = (await params) as { id: string };
 
   // Get the note with the ID.
-  const note = await getNoteData(id);
+  const note = await getNote(id);
 
   // Return note editor.
-  return <NoteEditor note={note} />;
+  return <NoteWrapper initialNote={note} />;
 }

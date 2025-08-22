@@ -6,7 +6,7 @@ export function useKeyboardSave(onSave: () => void | Promise<void>) {
     // Create keyboard handler for saving.
     const handler = (e: KeyboardEvent) => {
       // Get current OS.
-      const isMac = window.navigator.platform.toUpperCase().includes("Mac");
+      const isMac = window.navigator.platform.toUpperCase().includes("MAC");
 
       // Get the key.
       const key = e.key?.toLowerCase();
