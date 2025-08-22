@@ -7,6 +7,7 @@ import { updateNote } from "~/app/actions";
 import NoteTitleEditor from "~/components/note/title-editor";
 import NoteSaveStatus from "~/components/note/save-status";
 import TagEditor from "~/components/note/tag-editor";
+import ContentEditor from "~/components/note/content-editor";
 
 interface NoteWrapperProps {
   initialNote: ReadNote;
@@ -57,16 +58,16 @@ export default function NoteWrapper({ initialNote }: NoteWrapperProps) {
     <div className="relative flex flex-col rounded-lg border border-stone-400/25 p-6 shadow-sm">
       <div className="absolute inset-0 -z-10 h-full w-full bg-[image:var(--paper-texture)] opacity-25" />
 
-      <NoteSaveStatus
-        isPending={isPending}
-        isDirty={isDirty}
-        isError={isError}
-      />
-
       <NoteTitleEditor
         initialValue={note.title}
         onSave={(newTitle: string) => saveNote({ ...note, title: newTitle })}
         disabled={isPending}
+      />
+
+      <NoteSaveStatus
+        isPending={isPending}
+        isDirty={isDirty}
+        isError={isError}
       />
 
       <div className="bg-primary-100 border-primary-200 mt-6 rounded-md border p-3">
@@ -91,10 +92,13 @@ export default function NoteWrapper({ initialNote }: NoteWrapperProps) {
         </div>
       </div>
 
-      {/* Debug */}
-      <div className="mt-4 text-xs text-stone-400">
-        Current: {note.title} | Original: {initialNote.title}
-      </div>
+      <ContentEditor
+        initialContent={note.content ?? ""}
+        onSave={(newContent) =>
+          saveNote({ ...note, content: newContent ?? "" })
+        }
+        disabled={isPending}
+      />
     </div>
   );
 }

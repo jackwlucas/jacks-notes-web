@@ -1,6 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useState } from "react";
 import { XIcon } from "lucide-react";
 
 interface TagEditorProps {
