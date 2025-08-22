@@ -6,6 +6,7 @@ import { updateNote } from "~/app/actions";
 
 import NoteTitleEditor from "~/components/note/title-editor";
 import NoteSaveStatus from "~/components/note/save-status";
+import TagEditor from "~/components/note/tag-editor";
 
 interface NoteWrapperProps {
   initialNote: ReadNote;
@@ -56,19 +57,39 @@ export default function NoteWrapper({ initialNote }: NoteWrapperProps) {
     <div className="relative flex flex-col rounded-lg border border-stone-400/25 p-6 shadow-sm">
       <div className="absolute inset-0 -z-10 h-full w-full bg-[image:var(--paper-texture)] opacity-25" />
 
-      {/* Save Status */}
       <NoteSaveStatus
         isPending={isPending}
         isDirty={isDirty}
         isError={isError}
       />
 
-      {/* Title Editor - handles its own logic */}
       <NoteTitleEditor
         initialValue={note.title}
         onSave={(newTitle: string) => saveNote({ ...note, title: newTitle })}
         disabled={isPending}
       />
+
+      <div className="bg-primary-100 border-primary-200 mt-6 rounded-md border p-3">
+        <div className="grid grid-cols-[auto_1fr] gap-3 text-sm">
+          <p className="text-primary-500 mt-1 font-medium">Tags</p>
+          <TagEditor
+            initialTags={note.tags}
+            onSave={(newTags) => saveNote({ ...note, tags: newTags })}
+            disabled={isPending}
+          />
+
+          <div className="bg-primary-200 col-span-2 h-[1px]" />
+
+          <p className="text-primary-500 font-medium">Created</p>
+          <p className="text-stone-500">
+            {new Date(note.createdAt).toLocaleString()}
+          </p>
+          <p className="text-primary-500 font-medium">Updated</p>
+          <p className="text-stone-500">
+            {new Date(note.updatedAt).toLocaleString()}
+          </p>
+        </div>
+      </div>
 
       {/* Debug */}
       <div className="mt-4 text-xs text-stone-400">
